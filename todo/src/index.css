@@ -1,5 +1,4 @@
 /* styles.css */
-/* styles.css */
 
 .center-container {
     display: flex;
@@ -10,7 +9,6 @@
     padding: 20px;
 }
 
-/* Загальний контейнер для кнопок та інпуту */
 .task-container {
     display: flex;
     align-items: center;
@@ -26,7 +24,6 @@
     width: 100%;
 }
 
-/* Стиль для текстового інпуту */
 #task-input {
     padding: 10px;
     font-size: 16px;
@@ -36,7 +33,6 @@
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Стиль для кнопок */
 button {
     padding: 10px 15px;
     font-size: 16px;
@@ -46,7 +42,6 @@ button {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Стиль для кнопки Add */
 #add-task {
     background-color: #4CAF50;
     color: white;
@@ -57,7 +52,6 @@ button {
     background-color: #45a049;
 }
 
-/* Стиль для кнопки Sync */
 #sync-task {
     background-color: #007BFF;
     color: white;
@@ -105,7 +99,3 @@ button {
     opacity: 0;
     transition: opacity 500ms ease-in;
 }
-
-/*.draggable-item {*/
-/*    transition: transform 250ms ease-in-out;*/
-/*}*/
