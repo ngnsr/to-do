@@ -1,0 +1,11 @@
+services:
+
+  postgres:
+    image: postgres:14.12-alpine
+    environment:
+      POSTGRES_USER: dev-user
+      POSTGRES_PASSWORD: dev-password
+      POSTGRES_DB: todo
+      POSTGRES_ADMIN_PASSWORD: dev-admin-password
+    ports:
+      - '5432:5432'
