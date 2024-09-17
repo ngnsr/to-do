@@ -14,7 +14,7 @@ const TodoApp = () => {
 
     useEffect(() => {
         const savedList = localStorage.getItem("todoListTasks");
-        if (savedList && savedList.length > 0) {
+        if (savedList) {
             setList(JSON.parse(savedList));
             console.log("Fetched from localStorage");
         } else {
@@ -25,7 +25,7 @@ const TodoApp = () => {
 
     function saveToLocalStorage(json) {
         console.log("Saving to localStorage");
-        if (list && list.length > 0) {
+        if (list) {
             if(json){
                 localStorage.setItem("todoListTasks", json);
             }else{
@@ -105,20 +105,23 @@ const TodoApp = () => {
                 </button>
             </div>
 
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="droppable">
-                    {(provided, snapshot) => (
-                        <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                            className={`droppable-list ${snapshot.isDraggingOver ? "is-dragging-over" : ""}`}
-                        >
-                            <TaskList tasks={list} publishCompleted={publishCompleted} id={clientId} responseId={responseClientId} />
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+            {list && list.length > 0 ? (
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable">
+                        {(provided, snapshot) => (
+                            <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className={`droppable-list ${snapshot.isDraggingOver ? "is-dragging-over" : ""}`}
+                            >
+                                <TaskList tasks={list} publishCompleted={publishCompleted} id={clientId} responseId={responseClientId} />
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+                ) : (<p>No tasks available</p>)
+            }
         </div>
     );
 };
