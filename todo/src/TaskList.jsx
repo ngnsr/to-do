@@ -1,5 +1,5 @@
 import { useRef, useState, useLayoutEffect } from 'react';
-import { Droppable } from 'react-beautiful-dnd';
+import { Droppable } from '@hello-pangea/dnd';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import TaskItem from "./TaskItem.jsx";
 

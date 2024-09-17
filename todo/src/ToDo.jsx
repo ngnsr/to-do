@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSubscription, useStompClient } from "react-stomp-hooks";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import TaskList from "./TaskList";
 import {getToDoTasks} from "./api.js";
 import { v4 as uuid } from 'uuid'
@@ -11,12 +11,6 @@ let responseClientId = "";
 const TodoApp = () => {
     const [list, setList] = useState([]);
     const stompClient = useStompClient();
-
-    const error = console.error;
-    console.error = (...args) => {
-        if (/defaultProps/.test(args[0])) return;
-        error(...args);
-    };
 
     useEffect(() => {
         const savedList = localStorage.getItem("todoListTasks");
