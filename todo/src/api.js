@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://192.168.0.106:5555/api/todo';
+const API_URL = 'http://localhost:5555/api/todo';
 
 export const getToDoTasks = async () => {
   try {

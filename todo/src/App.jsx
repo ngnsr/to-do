@@ -6,7 +6,7 @@ function App() {
 
   return (
       <StompSessionProvider
-          url={"http://192.168.0.106:5555/api/ws"}>
+          url={"http://localhost:5555/api/ws"}>
         <ToDo/>
       </StompSessionProvider>
   );

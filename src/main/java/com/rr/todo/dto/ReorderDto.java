@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ReorderDto {
+    String clientId;
     int startIndex;
     int endIndex;
 }

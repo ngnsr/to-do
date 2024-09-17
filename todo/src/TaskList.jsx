@@ -1,15 +1,17 @@
 import { useRef, useState, useLayoutEffect } from 'react';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Droppable } from 'react-beautiful-dnd';
+import { TransitionGroup } from 'react-transition-group';
+import TaskItem from "./TaskItem.jsx";
 
-const TaskList = ({ tasks, publishCompleted }) => {
+const TaskList = ({ tasks, publishCompleted, id, responseId }) => {
     const taskRefs = useRef({});
     const [prevBoundingBox, setPrevBoundingBox] = useState({});
     const [boundingBox, setBoundingBox] = useState({});
-    // const nodeRef = useRef(null); // Створюємо реф для кожного елемента
 
     useLayoutEffect(() => {
         const newBoundingBox = {};
+        if(!tasks || tasks.length === 0) return;
+
         tasks.forEach((task) => {
             const node = taskRefs.current[task.id];
             if (node) {
@@ -21,6 +23,9 @@ const TaskList = ({ tasks, publishCompleted }) => {
     }, [tasks]);
 
     useLayoutEffect(() => {
+        if (id === responseId) return;
+
+        if(!tasks) return;
 
         tasks.forEach((task) => {
             const node = taskRefs.current[task.id];
@@ -48,7 +53,7 @@ const TaskList = ({ tasks, publishCompleted }) => {
         });
 
         setPrevBoundingBox(boundingBox);
-    }, [tasks, prevBoundingBox, boundingBox]);
+    }, [tasks, prevBoundingBox, boundingBox, id, responseId]);
 
     return (
         <Droppable droppableId="droppable">
@@ -60,39 +65,13 @@ const TaskList = ({ tasks, publishCompleted }) => {
                 >
                     <TransitionGroup component={null}>
                         {tasks.map((task, index) => (
-                            <CSSTransition
+                            <TaskItem
                                 key={task.id}
-                                timeout={500}
-                                classNames="task"
-                            >
-                                <Draggable key={task.id} draggableId={String(task.id)} index={index}>
-                                    {(provided) => (
-                                        <div
-                                            ref={(node) => {
-                                                taskRefs.current[task.id] = node;
-                                                provided.innerRef(node);
-                                            }}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                            className="draggable-item"
-                                        >
-                                            <div className="task-item">
-                                                <input
-                                                    type="checkbox"
-                                                    id={`task-checkbox${task.id}`}
-                                                    value={task.id}
-                                                    checked={task.completed}
-                                                    onChange={() => publishCompleted(task.id)}
-                                                />
-                                                <label htmlFor={`task-checkbox${task.id}`}>
-                                                    {task.description}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    )}
-                                </Draggable>
-                            </CSSTransition>
-                        ))}
+                                task={task}
+                                index={index}
+                                publishCompleted={publishCompleted}
+                                taskRefs={taskRefs}
+                            /> )) }
                     </TransitionGroup>
                     {provided.placeholder}
                 </div>

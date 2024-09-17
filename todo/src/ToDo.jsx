@@ -3,6 +3,10 @@ import { useSubscription, useStompClient } from "react-stomp-hooks";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import TaskList from "./TaskList";
 import {getToDoTasks} from "./api.js";
+import { v4 as uuid } from 'uuid'
+
+const clientId = uuid();
+let responseClientId = "";
 
 const TodoApp = () => {
     const [list, setList] = useState([]);
@@ -25,25 +29,33 @@ const TodoApp = () => {
         }
     }, []);
 
-    function saveToLocalStorage() {
+    function saveToLocalStorage(json) {
         console.log("Saving to localStorage");
-        if (list.length > 0) {
-            localStorage.setItem("todoListTasks", JSON.stringify(list));
+        if (list && list.length > 0) {
+            if(json){
+                localStorage.setItem("todoListTasks", json);
+            }else{
+                localStorage.setItem("todoListTasks", JSON.stringify(list));
+            }
         }
     }
 
     useSubscription("/topic/todos", (message) => {
-        const newList = JSON.parse(message.body);
-        if (JSON.stringify(newList) === JSON.stringify(list)) return;
+        const response = JSON.parse(message.body);
 
-        setList(newList);
+        console.log("subscr")
+        console.log(response);
+
+        responseClientId = response.id;
+        setList(response.list);
+
         saveToLocalStorage();
     });
 
     const publishReorder = async (startIndex, endIndex) => {
         if (startIndex === endIndex) return;
 
-        const reorder = { startIndex, endIndex };
+        const reorder = { clientId, startIndex, endIndex };
 
         if (stompClient) {
             await stompClient.publish({
@@ -53,16 +65,19 @@ const TodoApp = () => {
         }
     };
 
-    async function addTask() {
+    async function publishTask() {
         const description = document.getElementById("task-input").value;
         if (!description) return;
 
         if (stompClient) {
             await stompClient.publish({
                 destination: "/app/add",
-                body: JSON.stringify({ description }),
+                body: JSON.stringify({ id: clientId, description }),
             });
+        }else{
+            console.log("no stompClient")
         }
+
     }
 
     async function onDragEnd(result) {
@@ -82,7 +97,7 @@ const TodoApp = () => {
     async function publishCompleted(taskId) {
         if (stompClient) {
             await stompClient.publish({
-                destination: "/app/complete/" + taskId,
+                destination: "/app/complete/" + taskId + "/" + clientId,
             });
         }
     }
@@ -93,7 +108,7 @@ const TodoApp = () => {
 
             <div className="task-container">
                 <input type="text" id="task-input" placeholder="Enter new task here..." />
-                <button type="button" id="add-task" onClick={addTask}> Add </button>
+                <button type="button" id="add-task" onClick={publishTask}> Add </button>
                 <button type="button" id="sync-task" onClick={fetchTasks}>
                     Sync
                 </button>
@@ -107,7 +122,7 @@ const TodoApp = () => {
                             ref={provided.innerRef}
                             className={`droppable-list ${snapshot.isDraggingOver ? "is-dragging-over" : ""}`}
                         >
-                            <TaskList tasks={list} publishCompleted={publishCompleted} />
+                            <TaskList tasks={list} publishCompleted={publishCompleted} id={clientId} responseId={responseClientId} />
                             {provided.placeholder}
                         </div>
                     )}
