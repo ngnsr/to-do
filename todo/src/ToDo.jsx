@@ -43,9 +43,6 @@ const TodoApp = () => {
     useSubscription("/topic/todos", (message) => {
         const response = JSON.parse(message.body);
 
-        console.log("subscr")
-        console.log(response);
-
         responseClientId = response.id;
         setList(response.list);
 

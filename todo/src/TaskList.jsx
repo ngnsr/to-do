@@ -1,6 +1,6 @@
 import { useRef, useState, useLayoutEffect } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
-import { TransitionGroup } from 'react-transition-group';
+import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import TaskItem from "./TaskItem.jsx";
 
 const TaskList = ({ tasks, publishCompleted, id, responseId }) => {
@@ -10,7 +10,7 @@ const TaskList = ({ tasks, publishCompleted, id, responseId }) => {
 
     useLayoutEffect(() => {
         const newBoundingBox = {};
-        if(!tasks || tasks.length === 0) return;
+        if(!tasks) return;
 
         tasks.forEach((task) => {
             const node = taskRefs.current[task.id];
@@ -24,7 +24,6 @@ const TaskList = ({ tasks, publishCompleted, id, responseId }) => {
 
     useLayoutEffect(() => {
         if (id === responseId) return;
-
         if(!tasks) return;
 
         tasks.forEach((task) => {
@@ -65,13 +64,20 @@ const TaskList = ({ tasks, publishCompleted, id, responseId }) => {
                 >
                     <TransitionGroup component={null}>
                         {tasks.map((task, index) => (
-                            <TaskItem
+                            <CSSTransition
                                 key={task.id}
-                                task={task}
-                                index={index}
-                                publishCompleted={publishCompleted}
-                                taskRefs={taskRefs}
-                            /> )) }
+                                timeout={500}
+                                classNames="task"
+                            >
+                                <TaskItem
+                                    key={task.id}
+                                    task={task}
+                                    index={index}
+                                    publishCompleted={publishCompleted}
+                                    taskRefs={taskRefs}
+                                />
+                            </CSSTransition>
+                        )) }
                     </TransitionGroup>
                     {provided.placeholder}
                 </div>
