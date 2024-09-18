@@ -1,11 +1,45 @@
 services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    environment:
+      POSTGRES_USER: dev-user
+      POSTGRES_PASSWORD: dev-password
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/todo
+      SPRING_DATASOURCE_USERNAME: dev-user
+      SPRING_DATASOURCE_PASSWORD: dev-password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 5555
 
-  postgres:
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./todo
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    networks:
+      - app-network
+
+  db:
     image: postgres:14.12-alpine
     environment:
       POSTGRES_USER: dev-user
       POSTGRES_PASSWORD: dev-password
-      POSTGRES_DB: todo
       POSTGRES_ADMIN_PASSWORD: dev-admin-password
+      POSTGRES_DB: todo
     ports:
       - '5432:5432'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: host 

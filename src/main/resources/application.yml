@@ -3,7 +3,7 @@ spring:
     name: to-do
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/todo
+    url: jdbc:postgresql://db:5432/todo
     username: dev-user
     password: dev-password
 
