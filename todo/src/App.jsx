@@ -1,15 +1,14 @@
-import ToDoList from './ToDoList'
+import ToDo from './ToDo.jsx'
 
-import {StompSessionProvider, useStompClient} from "react-stomp-hooks";
+import {StompSessionProvider} from "react-stomp-hooks";
 
 function App() {
 
   return (
       <StompSessionProvider
-          url={"http://192.168.0.106:5555/api/ws"}>
-        <ToDoList/>
+          url={"http://localhost:5555/api/ws"}>
+        <ToDo/>
       </StompSessionProvider>
-
   );
 }
 
